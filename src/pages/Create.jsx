@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import axios from 'redaxios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { postMovie } from '../utils/APIRoutes';
 import Multiselect from "multiselect-react-dropdown";

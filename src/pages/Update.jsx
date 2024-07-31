@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'redaxios';
 import React, { useEffect, useState } from 'react'
 import { getMovies, postMovie } from '../utils/APIRoutes';
 import { CookiesProvider, useCookies } from "react-cookie";
