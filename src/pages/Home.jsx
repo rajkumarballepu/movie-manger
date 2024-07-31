@@ -1,26 +1,26 @@
-import axios from 'axios';
+import axios from 'redaxios';
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { deleteMovie, getMovies } from '../utils/APIRoutes';
 import {  useCookies, CookiesProvider } from 'react-cookie';
+import Loader from "./Loader";
 
 
 export default function Home() {
 
-
   const [moviesList, setMoviesList] = useState(undefined);
-  const navigate = useNavigate();
   const [cookie, setCookie] = useCookies(['moviesList'])
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(()=> {
     axios.get(getMovies).then((res)=> {
-      // console.log(res.data.list);
       localStorage.setItem('moviesList', JSON.stringify(res.data.list));
       setCookie('moviesList', res.data.list);
       const cookieData = cookie.moviesList;
       console.log(cookieData)
       setMoviesList(res.data.list);
       setMovies(res.data.list)
+      setIsLoading(true);
     }).catch((err)=> {
       console.log(err);
     })
@@ -39,7 +39,9 @@ export default function Home() {
 
   return (
     <CookiesProvider defaultSetOptions={{path: "/"}}>
-      <div id='home'>
+      {
+        !isLoading ? <Loader /> :
+        <div id='home'>
         <div className="container">
           <div className  ="row pt-4 pb-3">
             <div className="col-6">
@@ -86,6 +88,7 @@ export default function Home() {
                           let isDelete = confirm("Do you want to delete this movie?")
                           console.log(isDelete)
                           if(isDelete) {
+                            setIsLoading(true);
                             axios.delete(`${deleteMovie}/${movie._id}`).then((res)=> {
                               console.log(res);
                               window.location.reload();
@@ -104,9 +107,10 @@ export default function Home() {
             </tbody>
           </table>
           </div>
+        </div>
       </div>
-      </div>
-
+      }
+      
     </CookiesProvider>
   )
 }
